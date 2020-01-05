@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Requests\UsersRequest;
+use App\Http\Requests\UsersEditRequest;
 use App\User;
 use App\Role;
 use App\Photo;
@@ -45,12 +46,21 @@ class AdminUsersController extends Controller
      */
     public function store(UsersRequest $request)
     {
+
+       
         // User::create($request->all());
         // return redirect('/admin/users');
         // return $request->all();
 
         //input with files
-        $input = $request->all();
+      
+        if(trim($request->password) == ''){
+            $input = $request->except('password');
+        }else{
+            $input['password']=bcrypt($request->password);
+            $input = $request->all();
+        }
+
         if($file = $request->file('photo_id')){
             // return "photo exist";
             $name = time(). $file->getClientOriginalName();
@@ -59,8 +69,8 @@ class AdminUsersController extends Controller
             $photo = Photo::create(['path'=>$name]);
             $input['photo_id'] = $photo->id;
         }
-        //encrypt password
-        $input['password']=bcrypt($request->password);
+        // //encrypt password
+        // $input['password']=bcrypt($request->password);
         //save user
         User::create($input);
         return redirect('/admin/users');
@@ -98,9 +108,28 @@ class AdminUsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UsersRequest $request, $id)
+    public function update(UsersEditRequest $request, $id)
     {
-        //
+        // $input = $request->all();
+        if(trim($request->password) == ''){
+            $input = $request->except('password');
+        }else{
+            $input['password']=bcrypt($request->password);
+            $input = $request->all();
+        }
+
+        //check for files
+        if($file = $request->file('photo_id')){
+           $name = time() . $file->getClientOriginalName();
+           $file->move('images',$name);
+           $photo = Photo::create(['path'=>$name]);
+           $input['photo_id'] = $photo->id;
+        }
+        $input['password'] = bcrypt($request->password);
+        User::FindorFail($id)->update($input);
+
+       return redirect('/admin/users');
+
     }
 
     /**

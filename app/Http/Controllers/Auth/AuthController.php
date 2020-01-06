@@ -28,6 +28,10 @@ class AuthController extends Controller
      *
      * @var string
      */
+    // if(Auth::user()){
+    //     protected $redirectTo = '/admin';
+
+    // }
     protected $redirectTo = '/';
 
     /**

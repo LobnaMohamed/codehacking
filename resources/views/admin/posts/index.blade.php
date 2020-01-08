@@ -27,13 +27,13 @@
                 @foreach ($posts as $post)
                      <tr>
                         <td>{{$post->id}}</td>
-                        <td>{{$post->user->name}}</td>
-                        <td>{{$post->category_id}}</td>
+                        <td> <a href="{{route('admin.posts.edit',$post->id)}}">{{$post->user->name}}</a> </td>
+                        <td>{{$post->category ? $post->category->name :'uncategorized'}}</td>
 
 
                         <td><img height = '50px' src="{{$post->photo ? $post->photo->path : 'no photo'}} " alt=""> </td>
                         <td>{{$post->title}}</td>
-                        <td>{{$post->body}}</td>
+                        <td>{{str_limit($post->body,7)}}</td>
                         <td>{{$post->created_at->diffforHumans()}}</td>
                         <td>{{$post->updated_at->diffforHumans()}}</td>
     

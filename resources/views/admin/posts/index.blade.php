@@ -14,7 +14,7 @@
               <th>photo</th>
               <th>title</th>
               <th>body</th>
-
+              <th></th>
               <th>Created</th>
               <th>updated</th>
     
@@ -33,7 +33,10 @@
 
                         <td><img height = '50px' src="{{$post->photo ? $post->photo->path : 'no photo'}} " alt=""> </td>
                         <td>{{$post->title}}</td>
-                        <td>{{str_limit($post->body,7)}}</td>
+                        <td>{{str_limit($post->body,30)}}</td>
+                        <td><a href="{{route('home.post',$post->id)}}">view post</a></td>
+                        <td><a href="{{route('admin.comments.show',$post->id)}}">view comments</a></td>
+
                         <td>{{$post->created_at->diffforHumans()}}</td>
                         <td>{{$post->updated_at->diffforHumans()}}</td>
     
